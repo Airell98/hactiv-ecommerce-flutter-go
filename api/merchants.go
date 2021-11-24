@@ -145,6 +145,7 @@ func (server *Server) getOneMerchantById(ctx *gin.Context) {
 		Name:      merchant.Name,
 		Long:      merchant.Long,
 		Lat:       merchant.Lat,
+		Logo:      merchant.Logo,
 		CreatedAt: merchant.CreatedAt,
 		UpdatedAt: merchant.UpdatedAt,
 		Products:  productDatas,
