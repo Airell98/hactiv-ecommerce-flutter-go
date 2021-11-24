@@ -32,7 +32,7 @@ func (server *Server) createProduct(ctx *gin.Context) {
 		CategoryID: req.CategoryID,
 		MerchantID: req.MerchantID,
 		Image:      req.Image,
-		Stock:      1,
+		Stock:      100,
 	}
 
 	product, err := server.store.CreateProduct(context.Background(), arg)
