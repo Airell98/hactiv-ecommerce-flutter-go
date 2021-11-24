@@ -9,6 +9,7 @@ import (
 	db "github.com/AirellJordan98/hacktiv_ecommerce/db/sqlc"
 	"github.com/AirellJordan98/hacktiv_ecommerce/util"
 	"github.com/gin-gonic/gin"
+	"github.com/lib/pq"
 )
 
 type userRegisterRequest struct {
@@ -46,7 +47,13 @@ func (server *Server) userRegister(ctx *gin.Context) {
 	user, err := server.store.CreateUser(context.Background(), arg)
 
 	if err != nil {
-		fmt.Println(err.Error())
+		if pqErr, ok := err.(*pq.Error); ok {
+			switch pqErr.Code.Name() {
+			case "unique_violation":
+				ctx.JSON(http.StatusBadRequest, errorResponse("Bad Request", errors.New("email has been taken")))
+				return
+			}
+		}
 		ctx.JSON(http.StatusInternalServerError, errorResponse("Internal Server Error", errors.New("something went wrong")))
 		return
 	}

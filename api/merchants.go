@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	db "github.com/AirellJordan98/hacktiv_ecommerce/db/sqlc"
 	"github.com/gin-gonic/gin"
@@ -82,6 +83,17 @@ func (server *Server) updateMerchant(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, merchant)
 }
 
+type MerchantResponse struct {
+	ID        int64        `json:"id"`
+	Name      string       `json:"name"`
+	Lat       string       `json:"lat"`
+	Long      string       `json:"long"`
+	Logo      string       `json:"logo"`
+	CreatedAt time.Time    `json:"created_at"`
+	UpdatedAt time.Time    `json:"updated_at"`
+	Products  []db.Product `json:"products"`
+}
+
 func (server *Server) getOneMerchantById(ctx *gin.Context) {
 	merchantId, err := strconv.Atoi(ctx.Param("merchantId"))
 
@@ -96,8 +108,48 @@ func (server *Server) getOneMerchantById(ctx *gin.Context) {
 		ctx.JSON(http.StatusNotFound, errorResponse("Data Not Found", errors.New("merchant doesn't exist")))
 		return
 	}
+	productDatas := []db.Product{}
 
-	ctx.JSON(http.StatusOK, merchant)
+	sqlStmnt := "SELECT id, name, price, category_id, merchant_id, image, stock, created_at, updated_at from products WHERE merchant_id = $1"
+
+	rows, err := queryDB.Query(sqlStmnt, int64(merchantId))
+
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse("Internal Server Error", errors.New("something went wrong")))
+		return
+	}
+
+	for rows.Next() {
+		productData := db.Product{}
+		err = rows.Scan(
+			&productData.ID,
+			&productData.Name,
+			&productData.Price,
+			&productData.CategoryID,
+			&productData.MerchantID,
+			&productData.Image,
+			&productData.Stock,
+			&productData.CreatedAt,
+			&productData.UpdatedAt,
+		)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, errorResponse("Internal Server Error", errors.New("something went wrong")))
+			return
+		}
+
+		productDatas = append(productDatas, productData)
+	}
+
+	res := MerchantResponse{
+		ID:        merchant.ID,
+		Name:      merchant.Name,
+		Long:      merchant.Long,
+		Lat:       merchant.Lat,
+		CreatedAt: merchant.CreatedAt,
+		UpdatedAt: merchant.UpdatedAt,
+		Products:  productDatas,
+	}
+	ctx.JSON(http.StatusOK, res)
 }
 
 func (server *Server) getAllMerchants(ctx *gin.Context) {
