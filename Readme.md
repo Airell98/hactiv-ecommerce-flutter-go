@@ -811,6 +811,128 @@ _Response (500)_
   "message": "something went wrong"
 }
 ```
+### PUT /merchants/:merchantId
+**(update one merchant data by merchantId )**
+
+_Request Header_
+
+```
+Not needed
+```
+
+_Request Body_
+
+```
+{   
+    "name": "string<merchants's name>",
+    "lat": integer<merchants's latitude>,
+    "long": integer<merchants's longtitude>,
+    "logo": "string<merchants's logo url>"
+}
+```
+
+_Response (200)_
+
+```
+{
+    "id": 1,
+    "name": "Indomaret Kedoya",
+    "lat": "-6.176768",
+    "long": "106.764698",
+    "logo": "indomaret logo",
+    "created_at": "2021-11-15T00:30:20.645569+08:00",
+    "updated_at": "2021-11-15T00:30:20.645569+08:00"
+}
+```
+
+_Response (400)_
+
+```
+{ 
+  "error"  : "Bad Request"
+  "message": "merchant name, lat, long, and logo required"
+}
+```
+
+_Response (500)_
+
+```
+{  "error" : "Internal Server Error",
+  "message": "something went wrong"
+}
+```
+
+---
+
+### POST /merchants/get-nearest-merchants
+**(get all nearest merchant datas)**
+
+_Request Header_
+
+```
+Not needed
+```
+
+_Request Body_
+
+```
+{   
+    "lat": float/double/decimal<latitute>,
+    "long": float/double/decimal<longtitude>
+}
+```
+
+_Response (200)_
+
+```
+[
+  {
+        "id": 1,
+        "name": "Indomaret Kedoya",
+        "lat": "-6.176768",
+        "long": "106.764698",
+        "logo": "indomaret logo",
+        "created_at": "2021-11-15T00:30:20.645569+08:00",
+        "updated_at": "2021-11-15T00:30:20.645569+08:00",
+        "distance": 1.6341483293302557,
+        "id_2": 1,
+        "name_2": "Indomaret Kedoya",
+        "lat_2": "-6.176768",
+        "long_2": "106.764698",
+        "logo_2": "indomaret logo",
+        "created_at_2": "2021-11-15T00:30:20.645569+08:00",
+        "updated_at_2": "2021-11-15T00:30:20.645569+08:00"
+    },
+    {
+        "id": 5,
+        "name": "Indomaret Kedoya",
+        "lat": "-6.176768",
+        "long": "106.764698",
+        "logo": "https://upload.wikimedia.org/wikipedia/id/0/04/Logo_Indomaret.svg",
+        "created_at": "2021-11-24T16:20:18.134171+08:00",
+        "updated_at": "2021-11-24T16:20:18.134171+08:00",
+        "distance": 1.6341483293302557,
+        "id_2": 5,
+        "name_2": "Indomaret Kedoya",
+        "lat_2": "-6.176768",
+        "long_2": "106.764698",
+        "logo_2": "https://upload.wikimedia.org/wikipedia/id/0/04/Logo_Indomaret.svg",
+        "created_at_2": "2021-11-24T16:20:18.134171+08:00",
+        "updated_at_2": "2021-11-24T16:20:18.134171+08:00"
+    },
+]
+```
+
+_Response (500)_
+
+```
+{  
+  "error" : "Internal Server Error",
+  "message": "something went wrong"
+}
+```
+
+---
 
 
 ### PUT /merchants/:merchantId
