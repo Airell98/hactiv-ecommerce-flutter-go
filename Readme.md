@@ -1,4 +1,7 @@
 # RESTful endpoints
+```
+Heroku URL: https://hacktiv-ecommerce.herokuapp.com/
+```
 
 <!-- --- -->
 
