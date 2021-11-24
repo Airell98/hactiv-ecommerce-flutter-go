@@ -1,1 +1,1 @@
-web: github.com/AirellJordan98/hacktiv_ecommerce
+web: hacktiv_ecommerce
