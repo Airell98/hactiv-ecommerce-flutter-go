@@ -14,6 +14,7 @@ require (
 	github.com/lib/pq v1.10.4
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/rogpeppe/go-internal v1.8.0 // indirect
+	github.com/rs/cors v1.8.0 // indirect
 	github.com/stretchr/testify v1.7.0 // indirect
 	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5
 	golang.org/x/sys v0.0.0-20210823070655-63515b42dcdf // indirect

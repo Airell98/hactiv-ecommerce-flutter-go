@@ -5,6 +5,7 @@ import (
 
 	db "github.com/AirellJordan98/hacktiv_ecommerce/db/sqlc"
 	"github.com/gin-gonic/gin"
+	cors "github.com/rs/cors/wrapper/gin"
 )
 
 var queryDB *sql.DB
@@ -18,6 +19,8 @@ func NewServer(store db.Store, q *sql.DB) *Server {
 	queryDB = q
 	server := &Server{store: store}
 	router := gin.Default()
+
+	router.Use(cors.Default())
 
 	users := router.Group("/users")
 	{
