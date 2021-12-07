@@ -141,7 +141,7 @@ func (server *Server) getCartsByUserId(ctx *gin.Context) {
 		d := map[string]interface{}{
 			"id":            c.ID,
 			"product_id":    c.ProductID,
-			"product_image": c.ProductImage,
+			"product_image": '',
 			"qty":           c.Qty,
 			"total_price":   c.TotalPrice,
 			"user_id":       c.UserID,
@@ -167,6 +167,10 @@ func (server *Server) getCartsByUserId(ctx *gin.Context) {
 
 		if c.ProductStock.Valid {
 			d["product_stock"] = c.ProductStock.Int32
+		}
+
+		if c.ProductImage.Valid {
+			d["product_image"] = c.ProductImage.String
 		}
 
 		cartResponseData = append(cartResponseData, d)
