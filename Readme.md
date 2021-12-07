@@ -1238,10 +1238,7 @@ _Request Header_
 _Request Body_
 
 ```
-{   
-  "product_id": integer<carts's product_id>,
-  "qty": integer<carts's quantity>
-}
+not needed
 ```
 
 _Response (200)_
