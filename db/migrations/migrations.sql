@@ -48,7 +48,7 @@ CREATE TABLE users(
 
 
 CREATE TABLE carts (
-	id bigint PRIMARY KEY,
+	id bigserial PRIMARY KEY,
 	user_id int NOT NULL,
 	merchant_id int NOT NULL,
 	product_id int NOT NULL,

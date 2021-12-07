@@ -59,7 +59,7 @@ func (q *Queries) DeleteCart(ctx context.Context, id int64) error {
 }
 
 const getCartsByUserId = `-- name: GetCartsByUserId :many
-SELECT c.id, c.user_id, c.product_id, c.qty, c.total_price, m.name as merchant_name, p.name as product_name, p.price as product_price, p.stock as product_stock, c.created_at, c.updated_at  from carts as c 
+SELECT c.id, c.user_id, c.product_id, c.qty, c.total_price, m.name as merchant_name, p.name as product_name, p.image as product_image, p.price as product_price, p.stock as product_stock, c.created_at, c.updated_at  from carts as c 
 LEFT JOIN merchants as m on m.id = c.merchant_id
 LEFT JOIN products as p on p.id = c.product_id
 WHERE c.user_id = $1
@@ -73,6 +73,7 @@ type GetCartsByUserIdRow struct {
 	TotalPrice   int32          `json:"total_price"`
 	MerchantName sql.NullString `json:"merchant_name"`
 	ProductName  sql.NullString `json:"product_name"`
+	ProductImage sql.NullString `json:"product_image"`
 	ProductPrice sql.NullInt32  `json:"product_price"`
 	ProductStock sql.NullInt32  `json:"product_stock"`
 	CreatedAt    time.Time      `json:"created_at"`
@@ -96,6 +97,7 @@ func (q *Queries) GetCartsByUserId(ctx context.Context, userID int32) ([]GetCart
 			&i.TotalPrice,
 			&i.MerchantName,
 			&i.ProductName,
+			&i.ProductImage,
 			&i.ProductPrice,
 			&i.ProductStock,
 			&i.CreatedAt,

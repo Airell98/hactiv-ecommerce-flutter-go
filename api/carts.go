@@ -141,6 +141,7 @@ func (server *Server) getCartsByUserId(ctx *gin.Context) {
 		d := map[string]interface{}{
 			"id":            c.ID,
 			"product_id":    c.ProductID,
+			"product_image": c.ProductImage,
 			"qty":           c.Qty,
 			"total_price":   c.TotalPrice,
 			"user_id":       c.UserID,

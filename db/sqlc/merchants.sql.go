@@ -5,7 +5,6 @@ package db
 
 import (
 	"context"
-	"fmt"
 	"time"
 )
 
@@ -113,7 +112,7 @@ type GetNearestMerchantsRow struct {
 	Logo        string    `json:"logo"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
-	Distance    float64   `json:"distance"`
+	Distance    int32     `json:"distance"`
 	ID_2        int64     `json:"id_2"`
 	Name_2      string    `json:"name_2"`
 	Lat_2       string    `json:"lat_2"`
@@ -126,7 +125,6 @@ type GetNearestMerchantsRow struct {
 func (q *Queries) GetNearestMerchants(ctx context.Context, arg GetNearestMerchantsParams) ([]GetNearestMerchantsRow, error) {
 	rows, err := q.db.QueryContext(ctx, getNearestMerchants, arg.Radians, arg.Radians_2)
 	if err != nil {
-		fmt.Println("Error float64")
 		return nil, err
 	}
 	defer rows.Close()
@@ -150,7 +148,6 @@ func (q *Queries) GetNearestMerchants(ctx context.Context, arg GetNearestMerchan
 			&i.CreatedAt_2,
 			&i.UpdatedAt_2,
 		); err != nil {
-			fmt.Println("Error scanning:", err.Error())
 			return nil, err
 		}
 		items = append(items, i)
