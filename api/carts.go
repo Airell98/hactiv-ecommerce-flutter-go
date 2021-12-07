@@ -26,6 +26,9 @@ func (server *Server) createCart(ctx *gin.Context) {
 		return
 	}
 
+	userData := ctx.MustGet("userData").(jwt.MapClaims)
+	userID := int32(userData["id"].(float64))
+
 	product, err := server.store.GetOneProductById(context.Background(), int64(req.ProductID))
 
 	if err != nil {
@@ -46,25 +49,50 @@ func (server *Server) createCart(ctx *gin.Context) {
 	totalPrice := req.Qty * product.Price
 	_ = totalPrice
 
-	userData := ctx.MustGet("userData").(jwt.MapClaims)
-	userID := int32(userData["id"].(float64))
+	findCart, err := server.store.GetOneCartByUserIdAndProductId(context.Background(), db.GetOneCartByUserIdAndProductIdParams{
+		UserID:    userID,
+		ProductID: req.ProductID,
+	})
+	_ = findCart
 
-	arg := db.CreateCartParams{
-		UserID:     userID,
-		MerchantID: req.MerchantID,
-		ProductID:  req.ProductID,
+	if err != nil {
+		if err.Error() == "sql: no rows in result set" {
+			arg := db.CreateCartParams{
+				UserID:     userID,
+				MerchantID: req.MerchantID,
+				ProductID:  req.ProductID,
+				Qty:        req.Qty,
+				TotalPrice: totalPrice,
+			}
+
+			cart, err := server.store.CreateCart(context.Background(), arg)
+
+			if err != nil {
+				ctx.JSON(http.StatusInternalServerError, errorResponse("Internal Server Error", err))
+				return
+			}
+
+			ctx.JSON(http.StatusCreated, cart)
+			return
+		}
+		ctx.JSON(http.StatusInternalServerError, errorResponse("Internal Server Error", err))
+		return
+	}
+	arg := db.UpdateCartQtyParams{
+		ID:         findCart.ID,
 		Qty:        req.Qty,
 		TotalPrice: totalPrice,
 	}
 
-	cart, err := server.store.CreateCart(context.Background(), arg)
+	updatedCart, err := server.store.UpdateCartQty(context.Background(), arg)
 
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, errorResponse("Internal Server Error", err))
+		ctx.JSON(http.StatusInternalServerError, errorResponse("Internal Server Error", errors.New("something went wrong")))
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, cart)
+	ctx.JSON(http.StatusOK, updatedCart)
+
 }
 
 type updateCartRequest struct {

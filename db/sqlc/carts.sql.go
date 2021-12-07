@@ -137,6 +137,32 @@ func (q *Queries) GetOneCartByUserId(ctx context.Context, userID int32) (Cart, e
 	return i, err
 }
 
+const getOneCartByUserIdAndProductId = `-- name: GetOneCartByUserIdAndProductId :one
+SELECT id, user_id, merchant_id, product_id, qty, total_price, created_at, updated_at from carts
+WHERE user_id = $1 AND product_id = $2
+`
+
+type GetOneCartByUserIdAndProductIdParams struct {
+	UserID    int32 `json:"user_id"`
+	ProductID int32 `json:"product_id"`
+}
+
+func (q *Queries) GetOneCartByUserIdAndProductId(ctx context.Context, arg GetOneCartByUserIdAndProductIdParams) (Cart, error) {
+	row := q.db.QueryRowContext(ctx, getOneCartByUserIdAndProductId, arg.UserID, arg.ProductID)
+	var i Cart
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.MerchantID,
+		&i.ProductID,
+		&i.Qty,
+		&i.TotalPrice,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
 const updateCartQty = `-- name: UpdateCartQty :one
 UPDATE carts
 SET qty = $2, total_price = $3

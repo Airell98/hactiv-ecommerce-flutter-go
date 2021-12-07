@@ -18,6 +18,11 @@ WHERE c.user_id = $1;
 SELECT * from carts
 WHERE user_id = $1;
 
+  -- name: GetOneCartByUserIdAndProductId :one
+SELECT * from carts
+WHERE user_id = $1 AND product_id = $2;
+
+
   -- name: UpdateCartQty :one
 UPDATE carts
 SET qty = $2, total_price = $3
