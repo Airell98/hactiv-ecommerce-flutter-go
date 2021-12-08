@@ -15,22 +15,22 @@ func (server *Server) CartUserAuthorization() gin.HandlerFunc {
 		cartId, err := strconv.Atoi(c.Param("cartId"))
 
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusBadRequest, errors.New("invalid params id"))
+			c.AbortWithStatusJSON(http.StatusBadRequest, errorResponse("Bad Request", errors.New("invalid params id")))
 			return
 		}
 		userData := c.MustGet("userData").(jwt.MapClaims)
 
 		userID := uint(userData["id"].(float64))
 
-		cart, err := server.store.GetOneCartByUserId(context.Background(), int32(cartId))
+		cart, err := server.store.GetOneCartByUserId(context.Background(), int32(userID))
 
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusNotFound, errors.New("cart doesn't exist"))
+			c.AbortWithStatusJSON(http.StatusNotFound, errorResponse("Data Not Found", errors.New("cart data doens't exist")))
 			return
 		}
 
 		if uint(cart.UserID) != userID {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, errors.New("you're not allowed to access this data"))
+			c.AbortWithStatusJSON(http.StatusUnauthorized, errorResponse("Internal Server Error", errors.New("you're not allowed to access this data")))
 			return
 		}
 
