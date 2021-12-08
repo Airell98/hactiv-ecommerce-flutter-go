@@ -22,7 +22,7 @@ func (server *Server) CartUserAuthorization() gin.HandlerFunc {
 
 		userID := uint(userData["id"].(float64))
 
-		cart, err := server.store.GetOneCartByUserId(context.Background(), int32(userID))
+		cart, err := server.store.GetOneCartById(context.Background(), int64(cartId))
 
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusNotFound, errorResponse("Data Not Found", errors.New("cart data doens't exist")))
