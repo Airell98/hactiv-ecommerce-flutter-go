@@ -116,6 +116,48 @@ func (q *Queries) GetCartsByUserId(ctx context.Context, userID int32) ([]GetCart
 	return items, nil
 }
 
+const getOneCartById = `-- name: GetOneCartById :one
+SELECT c.id, c.user_id, c.product_id, c.qty, c.total_price, m.name as merchant_name, p.name as product_name, p.image as product_image, p.price as product_price, p.stock as product_stock, c.created_at, c.updated_at  from carts as c 
+LEFT JOIN merchants as m on m.id = c.merchant_id
+LEFT JOIN products as p on p.id = c.product_id
+WHERE c.id = $1
+`
+
+type GetOneCartByIdRow struct {
+	ID           int64          `json:"id"`
+	UserID       int32          `json:"user_id"`
+	ProductID    int32          `json:"product_id"`
+	Qty          int32          `json:"qty"`
+	TotalPrice   int32          `json:"total_price"`
+	MerchantName sql.NullString `json:"merchant_name"`
+	ProductName  sql.NullString `json:"product_name"`
+	ProductImage sql.NullString `json:"product_image"`
+	ProductPrice sql.NullInt32  `json:"product_price"`
+	ProductStock sql.NullInt32  `json:"product_stock"`
+	CreatedAt    time.Time      `json:"created_at"`
+	UpdatedAt    time.Time      `json:"updated_at"`
+}
+
+func (q *Queries) GetOneCartById(ctx context.Context, id int64) (GetOneCartByIdRow, error) {
+	row := q.db.QueryRowContext(ctx, getOneCartById, id)
+	var i GetOneCartByIdRow
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.ProductID,
+		&i.Qty,
+		&i.TotalPrice,
+		&i.MerchantName,
+		&i.ProductName,
+		&i.ProductImage,
+		&i.ProductPrice,
+		&i.ProductStock,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
 const getOneCartByUserId = `-- name: GetOneCartByUserId :one
 SELECT id, user_id, merchant_id, product_id, qty, total_price, created_at, updated_at from carts
 WHERE user_id = $1

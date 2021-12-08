@@ -13,6 +13,12 @@ LEFT JOIN merchants as m on m.id = c.merchant_id
 LEFT JOIN products as p on p.id = c.product_id
 WHERE c.user_id = $1;
 
+  -- name: GetOneCartById :one
+SELECT c.id, c.user_id, c.product_id, c.qty, c.total_price, m.name as merchant_name, p.name as product_name, p.image as product_image, p.price as product_price, p.stock as product_stock, c.created_at, c.updated_at  from carts as c 
+LEFT JOIN merchants as m on m.id = c.merchant_id
+LEFT JOIN products as p on p.id = c.product_id
+WHERE c.id = $1;
+
 
   -- name: GetOneCartByUserId :one
 SELECT * from carts

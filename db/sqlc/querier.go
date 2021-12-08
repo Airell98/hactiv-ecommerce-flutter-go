@@ -22,6 +22,7 @@ type Querier interface {
 	GetAllProducts(ctx context.Context) ([]Product, error)
 	GetCartsByUserId(ctx context.Context, userID int32) ([]GetCartsByUserIdRow, error)
 	GetNearestMerchants(ctx context.Context, arg GetNearestMerchantsParams) ([]GetNearestMerchantsRow, error)
+	GetOneCartById(ctx context.Context, id int64) (GetOneCartByIdRow, error)
 	GetOneCartByUserId(ctx context.Context, userID int32) (Cart, error)
 	GetOneCartByUserIdAndProductId(ctx context.Context, arg GetOneCartByUserIdAndProductIdParams) (Cart, error)
 	GetOneCategoryById(ctx context.Context, id int64) (Category, error)

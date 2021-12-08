@@ -68,11 +68,53 @@ func (server *Server) createCart(ctx *gin.Context) {
 			cart, err := server.store.CreateCart(context.Background(), arg)
 
 			if err != nil {
-				ctx.JSON(http.StatusInternalServerError, errorResponse("Internal Server Error", err))
+				ctx.JSON(http.StatusInternalServerError, errorResponse("Internal Server Error", errors.New("something went wrong")))
 				return
 			}
 
-			ctx.JSON(http.StatusCreated, cart)
+			newCart, err := server.store.GetOneCartById(context.Background(), cart.ID)
+
+			if err != nil {
+				ctx.JSON(http.StatusInternalServerError, errorResponse("Internal Server Error", errors.New("something went wrong")))
+				return
+			}
+
+			d := map[string]interface{}{
+				"id":            newCart.ID,
+				"product_id":    newCart.ProductID,
+				"product_image": "",
+				"qty":           newCart.Qty,
+				"total_price":   newCart.TotalPrice,
+				"user_id":       newCart.UserID,
+				"created_at":    newCart.CreatedAt,
+				"updated_at":    newCart.UpdatedAt,
+				"merchant_name": "",
+				"product_name":  "",
+				"product_price": 0,
+				"product_stock": 0,
+			}
+
+			if newCart.MerchantName.Valid {
+				d["merchant_name"] = newCart.MerchantName.String
+			}
+
+			if newCart.ProductName.Valid {
+				d["product_name"] = newCart.ProductName.String
+			}
+
+			if newCart.ProductPrice.Valid {
+				d["product_price"] = newCart.ProductPrice.Int32
+			}
+
+			if newCart.ProductStock.Valid {
+				d["product_stock"] = newCart.ProductStock.Int32
+			}
+
+			if newCart.ProductImage.Valid {
+				d["product_image"] = newCart.ProductImage.String
+			}
+
+			ctx.JSON(http.StatusCreated, d)
 			return
 		}
 		ctx.JSON(http.StatusInternalServerError, errorResponse("Internal Server Error", err))
