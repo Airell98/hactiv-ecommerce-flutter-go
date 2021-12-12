@@ -20,7 +20,7 @@ WHERE id = $1 LIMIT 1;
 SELECT * from merchants ORDER BY id ASC;
 
   -- name: SearchCertainMerchants :many
-SELECT * from merchants WHERE name LIKE $1 ORDER BY id ASC;
+SELECT * from merchants WHERE name ILIKE $1 ORDER BY id ASC;
 
   -- name: DeleteMerchant :exec
 DELETE from merchants
