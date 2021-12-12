@@ -196,7 +196,7 @@ func (server *Server) getNearestMerchants(ctx *gin.Context) {
 }
 
 func (server *Server) searchCertainMerchants(ctx *gin.Context) {
-	var merchantName string = ctx.Param("merchantId")
+	var merchantName string = ctx.Param("merchantName")
 
 	merchantName = "%" + merchantName + "%"
 	merchants, err := server.store.SearchCertainMerchants(context.Background(), merchantName)
