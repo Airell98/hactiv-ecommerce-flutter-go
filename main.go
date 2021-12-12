@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"reflect"
 
 	"github.com/AirellJordan98/hacktiv_ecommerce/api"
 	db "github.com/AirellJordan98/hacktiv_ecommerce/db/sqlc"
@@ -51,32 +50,32 @@ func main() {
 
 }
 
-type Person struct {
-	Name string `required:"true" json:"name"`
-	Age  int    `required:"true"`
-}
+// type Person struct {
+// 	Name string `required:"true" json:"name"`
+// 	Age  int    `required:"true"`
+// }
 
-func CatchErr() {
-	if r := recover(); r != nil {
-		fmt.Println("error brow")
-	}
-}
+// func CatchErr() {
+// 	if r := recover(); r != nil {
+// 		fmt.Println("error brow")
+// 	}
+// }
 
-func isValid(data interface{}) error {
-	r := reflect.TypeOf(data)
-	v := reflect.ValueOf(data)
-	for i := 0; i < r.NumField(); i++ {
-		t := r.Field(i)
-		if t.Tag.Get("required") == "true" {
-			if v.Field(i).String() == "" {
-				tName := t.Tag.Get("json")
-				return fmt.Errorf("field %v is required", tName)
-			}
-		}
-	}
+// func isValid(data interface{}) error {
+// 	r := reflect.TypeOf(data)
+// 	v := reflect.ValueOf(data)
+// 	for i := 0; i < r.NumField(); i++ {
+// 		t := r.Field(i)
+// 		if t.Tag.Get("required") == "true" {
+// 			if v.Field(i).String() == "" {
+// 				tName := t.Tag.Get("json")
+// 				return fmt.Errorf("field %v is required", tName)
+// 			}
+// 		}
+// 	}
 
-	return nil
-}
+// 	return nil
+// }
 
 // func main() {
 // urls := []string{"https://golang.org", "https://www.google.com"}
