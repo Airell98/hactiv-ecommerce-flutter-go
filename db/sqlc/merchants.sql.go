@@ -182,7 +182,7 @@ func (q *Queries) GetOneMerchantById(ctx context.Context, id int64) (Merchant, e
 }
 
 const searchCertainMerchants = `-- name: SearchCertainMerchants :many
-SELECT id, name, lat, long, logo, created_at, updated_at from merchants WHERE name LIKE $1 ORDER BY id ASC
+SELECT id, name, lat, long, logo, created_at, updated_at from merchants WHERE name ILIKE $1 ORDER BY id ASC
 `
 
 func (q *Queries) SearchCertainMerchants(ctx context.Context, name string) ([]Merchant, error) {
