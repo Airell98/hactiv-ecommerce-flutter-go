@@ -195,20 +195,11 @@ func (server *Server) getNearestMerchants(ctx *gin.Context) {
 
 }
 
-type getCertainMerchantRequest struct {
-	Name string `json:"name"`
-}
-
 func (server *Server) searchCertainMerchants(ctx *gin.Context) {
-	var req getCertainMerchantRequest
+	var merchantName string = ctx.Param("merchantId")
 
-	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, errorResponse("Bad Request", err))
-		return
-	}
-
-	req.Name = "%" + req.Name + "%"
-	merchants, err := server.store.SearchCertainMerchants(context.Background(), req.Name)
+	merchantName = "%" + merchantName + "%"
+	merchants, err := server.store.SearchCertainMerchants(context.Background(), merchantName)
 
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse("Bad Request", err))

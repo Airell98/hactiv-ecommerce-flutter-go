@@ -35,7 +35,7 @@ func NewServer(store db.Store, q *sql.DB) *Server {
 		merchantRouter.GET("/:merchantId", server.getOneMerchantById)
 		merchantRouter.PUT("/:merchantId", server.updateMerchant)
 		merchantRouter.POST("/get-nearest-merchants", server.getNearestMerchants)
-		merchantRouter.GET("/search-merchants", server.searchCertainMerchants)
+		merchantRouter.GET("/search-merchants:/merchantName", server.searchCertainMerchants)
 	}
 
 	categoryRouter := router.Group("/categories")
