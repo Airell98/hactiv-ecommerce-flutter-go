@@ -29,6 +29,7 @@ type Querier interface {
 	GetOneMerchantById(ctx context.Context, id int64) (Merchant, error)
 	GetOneProductById(ctx context.Context, id int64) (Product, error)
 	GetOneUserByEmail(ctx context.Context, email string) (User, error)
+	SearchCertainMerchants(ctx context.Context, name string) ([]Merchant, error)
 	UpdateCartQty(ctx context.Context, arg UpdateCartQtyParams) (Cart, error)
 	UpdateCategory(ctx context.Context, arg UpdateCategoryParams) (Category, error)
 	UpdateMerchant(ctx context.Context, arg UpdateMerchantParams) (Merchant, error)

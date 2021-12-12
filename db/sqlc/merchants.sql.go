@@ -181,6 +181,41 @@ func (q *Queries) GetOneMerchantById(ctx context.Context, id int64) (Merchant, e
 	return i, err
 }
 
+const searchCertainMerchants = `-- name: SearchCertainMerchants :many
+SELECT id, name, lat, long, logo, created_at, updated_at from merchants WHERE name LIKE $1 ORDER BY id ASC
+`
+
+func (q *Queries) SearchCertainMerchants(ctx context.Context, name string) ([]Merchant, error) {
+	rows, err := q.db.QueryContext(ctx, searchCertainMerchants, name)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []Merchant{}
+	for rows.Next() {
+		var i Merchant
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.Lat,
+			&i.Long,
+			&i.Logo,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateMerchant = `-- name: UpdateMerchant :one
 UPDATE merchants
 SET name = $2, long = $3, lat = $4
