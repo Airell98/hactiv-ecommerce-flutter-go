@@ -12,6 +12,12 @@ SET name = $2, long = $3, lat = $4
 WHERE id = $1
 RETURNING *;
 
+  -- name: UpdateMerchantLogo :one
+UPDATE merchants
+SET logo = $2
+WHERE id = $1
+RETURNING *;
+
   -- name: GetOneMerchantById :one
 SELECT * from merchants 
 WHERE id = $1 LIMIT 1;

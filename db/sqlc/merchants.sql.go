@@ -249,3 +249,30 @@ func (q *Queries) UpdateMerchant(ctx context.Context, arg UpdateMerchantParams) 
 	)
 	return i, err
 }
+
+const updateMerchantLogo = `-- name: UpdateMerchantLogo :one
+UPDATE merchants
+SET logo = $2
+WHERE id = $1
+RETURNING id, name, lat, long, logo, created_at, updated_at
+`
+
+type UpdateMerchantLogoParams struct {
+	ID   int64  `json:"id"`
+	Logo string `json:"logo"`
+}
+
+func (q *Queries) UpdateMerchantLogo(ctx context.Context, arg UpdateMerchantLogoParams) (Merchant, error) {
+	row := q.db.QueryRowContext(ctx, updateMerchantLogo, arg.ID, arg.Logo)
+	var i Merchant
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Lat,
+		&i.Long,
+		&i.Logo,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}

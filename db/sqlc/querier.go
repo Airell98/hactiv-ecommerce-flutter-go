@@ -33,6 +33,7 @@ type Querier interface {
 	UpdateCartQty(ctx context.Context, arg UpdateCartQtyParams) (Cart, error)
 	UpdateCategory(ctx context.Context, arg UpdateCategoryParams) (Category, error)
 	UpdateMerchant(ctx context.Context, arg UpdateMerchantParams) (Merchant, error)
+	UpdateMerchantLogo(ctx context.Context, arg UpdateMerchantLogoParams) (Merchant, error)
 	UpdateProduct(ctx context.Context, arg UpdateProductParams) (Product, error)
 	UpdateProductStock(ctx context.Context, arg UpdateProductStockParams) (Product, error)
 	UpdateUser(ctx context.Context, email string) (User, error)

@@ -83,6 +83,40 @@ func (server *Server) updateMerchant(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, merchant)
 }
 
+type updateMerchantLogoRequest struct {
+	Logo string `json:"logo" binding:"required"`
+}
+
+func (server *Server) updateMerchantLogo(ctx *gin.Context) {
+	var req updateMerchantLogoRequest
+	merchantId, err := strconv.Atoi(ctx.Param("merchantId"))
+
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse("Bad Request", errors.New("invalid params id")))
+		return
+	}
+
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse("Bad Request", err))
+		return
+	}
+
+	arg := db.UpdateMerchantLogoParams{
+		ID:   int64(merchantId),
+		Logo: req.Logo,
+	}
+
+	merchant, err := server.store.UpdateMerchantLogo(context.Background(), arg)
+
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse("Bad Request", errors.New("something went wrong")))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, merchant)
+
+}
+
 type MerchantResponse struct {
 	ID        int64        `json:"id"`
 	Name      string       `json:"name"`
